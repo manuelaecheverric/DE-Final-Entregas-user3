@@ -1,0 +1,37 @@
+{
+  "base_datos_glue": {
+    "sensitive": false,
+    "type": "string",
+    "value": "de_final_entregas_gr01_user3"
+  },
+  "bucket": {
+    "sensitive": false,
+    "type": "string",
+    "value": "de-final-entregas-gr01-user3"
+  },
+  "region": {
+    "sensitive": false,
+    "type": "string",
+    "value": "us-east-2"
+  },
+  "tabla_glue": {
+    "sensitive": false,
+    "type": "string",
+    "value": "entregas"
+  },
+  "ubicacion_datos": {
+    "sensitive": false,
+    "type": "string",
+    "value": "s3://de-final-entregas-gr01-user3/entregas/"
+  },
+  "ubicacion_resultados_athena": {
+    "sensitive": false,
+    "type": "string",
+    "value": "s3://de-final-entregas-gr01-user3/resultados-athena/"
+  },
+  "workgroup_athena": {
+    "sensitive": false,
+    "type": "string",
+    "value": "de-final-entregas-gr01-user3"
+  }
+}

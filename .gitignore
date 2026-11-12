@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+
+# Credenciales
+.aws/
+credentials
+*.pem
+*.key
+.env

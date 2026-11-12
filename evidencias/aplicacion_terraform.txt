@@ -1,0 +1,26 @@
+aws_glue_catalog_database.entregas: Creating...
+aws_s3_bucket.datos: Creating...
+aws_glue_catalog_database.entregas: Creation complete after 1s [id=<ID_CUENTA>:de_final_entregas_gr01_user3]
+aws_s3_bucket.datos: Creation complete after 4s [id=de-final-entregas-gr01-user3]
+aws_s3_bucket_public_access_block.datos: Creating...
+aws_s3_object.prefijo_entregas: Creating...
+aws_s3_object.prefijo_resultados_athena: Creating...
+aws_athena_workgroup.entregas: Creating...
+aws_glue_catalog_table.entregas: Creating...
+aws_s3_bucket_public_access_block.datos: Creation complete after 0s [id=de-final-entregas-gr01-user3]
+aws_s3_object.prefijo_entregas: Creation complete after 0s [id=de-final-entregas-gr01-user3/entregas/]
+aws_s3_object.prefijo_resultados_athena: Creation complete after 0s [id=de-final-entregas-gr01-user3/resultados-athena/]
+aws_glue_catalog_table.entregas: Creation complete after 0s [id=<ID_CUENTA>:de_final_entregas_gr01_user3:entregas]
+aws_athena_workgroup.entregas: Creation complete after 0s [id=de-final-entregas-gr01-user3]
+
+Apply complete! Resources: 7 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+base_datos_glue = "de_final_entregas_gr01_user3"
+bucket = "de-final-entregas-gr01-user3"
+region = "us-east-2"
+tabla_glue = "entregas"
+ubicacion_datos = "s3://de-final-entregas-gr01-user3/entregas/"
+ubicacion_resultados_athena = "s3://de-final-entregas-gr01-user3/resultados-athena/"
+workgroup_athena = "de-final-entregas-gr01-user3"
