@@ -6,7 +6,7 @@ Porque la tabla `entregas` usa **partition projection**. En vez de guardar cada 
 
 Cuando Athena ejecuta una consulta, genera las fechas del rango (o solo las del filtro `WHERE fecha ...`) y arma la ruta de S3 de cada una con la plantilla. Como el 2026-10-03 estaba dentro del rango desde el `terraform apply` inicial, bastó con subir el archivo a `entregas/fecha=2026-10-03/entregas.csv`: Athena ya "sabía" dónde buscarlo.
 
-Evidencia: no se usó crawler, `MSCK REPAIR TABLE` ni `ALTER TABLE ADD PARTITION`, y Terraform se aplicó una sola vez (`evidencias/aplicacion_terraform.txt`). Aun así, la ejecución `45ac5123-1d76-49a8-948e-c7713136b823` (`consultas/verificacion_tercer_dia.sql`) devolvió 6 registros del día 3 y 18 en total (`resultados/final/verificacion_tercer_dia.csv`). Las consultas finales coinciden con `resultados_esperados/`.
+Evidencia: no se usó crawler, `MSCK REPAIR TABLE` ni `ALTER TABLE ADD PARTITION`, y la infraestructura no se modificó entre la carga de los días 1-2 y la del día 3 (`evidencias/aplicacion_terraform.txt`). Aun así, la ejecución `45ac5123-1d76-49a8-948e-c7713136b823` (`consultas/verificacion_tercer_dia.sql`) devolvió 6 registros del día 3 y 18 en total (`resultados/final/verificacion_tercer_dia_totales.csv`). Los seis registros del día están en `resultados/final/verificacion_tercer_dia.csv`, obtenidos en la re-verificación descrita en la sección 5 del README. Las consultas finales coinciden con `resultados_esperados/`.
 
 ## 2. ¿Qué se necesitaría para consultar un archivo del 4 de octubre?
 

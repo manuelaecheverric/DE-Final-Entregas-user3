@@ -42,7 +42,7 @@ aws s3 cp "data\entregas\fecha=2026-10-02\entregas.csv" "s3://$b/entregas/fecha=
 ```powershell
 aws s3 cp "data\entregas\fecha=2026-10-03\entregas.csv" "s3://$b/entregas/fecha=2026-10-03/entregas.csv"
 ```
-Sin cambiar infraestructura ni propiedades de la tabla, y sin crawlers, `MSCK REPAIR`, `ALTER TABLE ADD PARTITION` ni particiones en Terraform. Se ejecutó `verificacion_tercer_dia.sql` (6 registros del día 3, 18 en total) y se volvieron a ejecutar las consultas de intentos y porcentaje con el filtro ampliado hasta 2026-10-03. Resultados en `resultados/final/`, iguales a los esperados.
+Sin cambiar infraestructura ni propiedades de la tabla, y sin crawlers, `MSCK REPAIR`, `ALTER TABLE ADD PARTITION` ni particiones en Terraform. Se ejecutó la consulta de totales de `verificacion_tercer_dia.sql` (6 registros del día 3, 18 en total; `resultados/final/verificacion_tercer_dia_totales.csv`) y se volvieron a ejecutar las consultas de intentos y porcentaje con el filtro ampliado hasta 2026-10-03. Resultados en `resultados/final/`, iguales a los esperados.
 
 Todas las ejecuciones (etapa, SQL, id, resultado) están en `evidencias/ejecuciones_athena.csv`.
 
@@ -53,6 +53,18 @@ terraform -chdir=infraestructura plan -destroy   # 5 to destroy (los 2 prefijos 
 cmd /c "terraform -chdir=infraestructura destroy -auto-approve -no-color > evidencias\eliminacion_terraform.txt 2>&1"
 ```
 
+### 5. Re-verificación del día 3 (despliegue adicional)
+Al revisar la entrega se detectó que `resultados/final/verificacion_tercer_dia.csv` solo tenía los conteos (6 y 18), y el enunciado pide guardar ahí **los seis registros** del día 3. Como los recursos ya se habían eliminado, se volvió a desplegar exactamente el mismo código Terraform, sin ningún cambio, para completar esa evidencia:
+
+1. `terraform plan` (7 to add) y `apply` → `evidencias/aplicacion_terraform_reverificacion.txt`.
+2. Carga archivo por archivo, en orden: día 1, día 2 y día 3 (`aws s3 cp`, sin carga recursiva).
+3. Se ejecutaron en el workgroup las consultas 1 y 2 de `consultas/verificacion_tercer_dia.sql`. Athena ejecuta una sentencia por ejecución, así que cada una se lanzó por separado:
+   - registros del 2026-10-03 → `resultados/final/verificacion_tercer_dia.csv` (6 filas);
+   - conteo por estado del 2026-10-03 → `resultados/final/verificacion_tercer_dia_conteo_estado.csv` (3, 1 y 2, igual que en `intentos_por_fecha_estado.csv`).
+4. Vaciado del bucket y `terraform destroy` → `evidencias/eliminacion_terraform_reverificacion.txt`.
+
+La tabla, sus propiedades y el rango de proyección no se modificaron. Tampoco se usaron crawlers, `MSCK REPAIR` ni `ALTER TABLE ADD PARTITION`. Los ids de ejecución quedaron registrados con etapa `final` en `evidencias/ejecuciones_athena.csv`.
+
 ## Costos
 La facturación de la cuenta no es visible para los estudiantes, así que el costo se midió con `DataScannedInBytes`: cada consulta escaneó 949 bytes. Athena cobra USD 5/TB con un mínimo de 10 MB por consulta, por lo que el total es menor que USD 0,001. Ningún recurso tiene cobro por hora y todo se eliminó al final.
 
@@ -60,6 +72,7 @@ La facturación de la cuenta no es visible para los estudiantes, así que el cos
 - `evidencias/aplicacion_terraform.txt`, `evidencias/outputs.json`: salida del apply y outputs.
 - `evidencias/ejecuciones_athena.csv`: ids de ejecución antes y después del día 3.
 - `evidencias/eliminacion_terraform.txt`: salida del destroy.
+- `evidencias/aplicacion_terraform_reverificacion.txt` y `evidencias/eliminacion_terraform_reverificacion.txt`: apply y destroy del despliegue adicional de la sección 5.
 - Capturas `.png` de apply, S3, Athena y consultas recientes.
 - En los archivos de texto, el número de cuenta AWS se reemplazó por `<ID_CUENTA>`; en las capturas se ocultó.
 
